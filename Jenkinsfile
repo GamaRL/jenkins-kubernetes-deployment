@@ -1,33 +1,34 @@
 pipeline {
 
+  agent any
+
   environment {
     dockerimagename = "gamarl01/react-app"
-    dockerImage = ""
   }
-
-  agent any
 
   stages {
 
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/GamaRL/jenkins-kubernetes-deployment.git'
+        checkout([$class: 'GitSCM', 
+                  branches: [[name: '*/main']], 
+                  userRemoteConfigs: [[url: 'https://github.com/GamaRL/jenkins-kubernetes-deployment.git']]
+        ])
       }
     }
 
     stage('Build image') {
-      steps{
+      steps {
         script {
-          dockerImage = docker.build dockerimagename
+          def dockerImage = docker.build(dockerimagename)
         }
       }
     }
 
-
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "deployment.yaml", "service.yaml")
+          kubernetesDeploy(configs: ['deployment.yaml', 'service.yaml'])
         }
       }
     }
