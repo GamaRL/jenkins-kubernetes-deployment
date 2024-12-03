@@ -7,9 +7,6 @@ pipeline {
       kind: Pod
       spec:
         containers:
-        - name: jnlp
-          image: jenkins/inbound-agent:latest
-          args: ["\$(JENKINS_SECRET)", "\$(JENKINS_AGENT_NAME)"]
         - name: docker
           image: docker:latest
           command:
