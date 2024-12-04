@@ -1,5 +1,4 @@
 pipeline {
-
   agent any
 
   environment {
@@ -7,7 +6,6 @@ pipeline {
   }
 
   stages {
-
     stage('Checkout Source') {
       steps {
         checkout([$class: 'GitSCM', 
@@ -28,11 +26,11 @@ pipeline {
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: ['deployment.yaml', 'service.yaml'])
+          // Using kubectl directly to deploy to Kubernetes
+          sh 'kubectl apply -f deployment.yaml'
+          sh 'kubectl apply -f service.yaml'
         }
       }
     }
-
   }
-
 }
